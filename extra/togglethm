@@ -1,0 +1,27 @@
+#! /bin/dash
+
+current=$(readlink -nse "$XDG_COLORS_DIR/current")
+base=$(basename "$current")
+name=${base%-*}
+bgtype=${base##*-}
+
+if [ $# -gt 0 ] ; then
+    bgtype=$1
+else
+    case "$bgtype" in
+        dark)
+            bgtype=light
+            ;;
+        light)
+            bgtype=dark
+            ;;
+    esac
+fi
+
+setthm "${name}-${bgtype}"
+setconfbg "$HOME/.neaprc" $bgtype
+setconfbg "$XDG_CONFIG_HOME/tint2/tint2rc" $bgtype
+setconfbg "$HOME/.themes/raven/openbox-3/themerc" $bgtype
+
+pkill -USR2 -x openbox
+reloadpanel
