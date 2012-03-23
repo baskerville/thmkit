@@ -1,3 +1,4 @@
 #! /bin/dash
 
-killpanel && launchpanel
+killpanel
+launchpanel
