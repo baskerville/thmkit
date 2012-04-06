@@ -21,6 +21,7 @@ SIMPLE_HUES = [(30 + 60 * i) % 360 for i in range(6)]
 STANDARD_POSITIONS = [1, 3, 2, 6, 4, 5]
 STANDARD_LABELS = ['RED', 'YEL', 'GRN', 'CYN', 'BLU', 'MAG']
 standard_hues = SIMPLE_HUES
+fgbg_contrast = 16
 translate_stdin = False
 scheme_name = 'colors'
 redef_file = None
@@ -71,10 +72,10 @@ def make_scheme(hex_bg, standard_hues, scheme_name):
 # Reference:
 # Silvia Zuffi, Carla Brambilla, Giordano Beretta and Paolo Scala:
 # Human Computer Interaction: Legibility and Contrast (2007)
-    global redef_file, translate_stdin
+    global redef_file, fgbg_contrast, translate_stdin
     scheme_kind = 'dark'
     small_jump = 3
-    bg_fg_gap = 16 * small_jump
+    bg_fg_gap = fgbg_contrast * small_jump
     fg_cl_L = 100
     bg_fl_L = 100 - fg_cl_L
     dark_chroma = 11 * small_jump
@@ -458,8 +459,8 @@ OPTIONS
     sys.exit(1)
 
 def main():
-    global standard_hues, scheme_name, translate_stdin
-    opts, args = getopt(sys.argv[1:], 'hts:', ['help', 'translate', 'standard-hues='])
+    global standard_hues, scheme_name, fgbg_contrast, translate_stdin
+    opts, args = getopt(sys.argv[1:], 'htc:s:', ['help', 'translate', '--fgbg-contrast=', 'standard-hues='])
 
     if len(args) < 1:
         usage()
@@ -469,6 +470,8 @@ def main():
             usage()
         if opt in ('-t', '--translate'):
             translate_stdin = True
+        if opt in ('-c', '--fgbg-constrast'):
+            fgbg_contrast = float(val)
         elif opt in ('-k', '--standard-hues'):
             standard_hues = map(float, val.split(','))
 
