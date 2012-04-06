@@ -441,6 +441,7 @@ hi def link perlSharpBang Comment'''.format(**idx_color_set), file = vim_file)
     chmod(redef_name, 0o744)
 
 def usage():
+    global fgbg_contrast
     print('''
 SYNOPSIS
     {} [OPTIONS] BACKGROUND_COLOR [SCHEME_NAME]
@@ -452,10 +453,14 @@ OPTIONS
     -t, --translate
         Format stdin, output the result to stdout.
 
+    -c, --fgbg-contrast
+        Define the 'strength' of the contrast between the foreground
+        and the background color (default value: {}).
+
     -s, --standard-hues <LIST_OF_HUES>
-        Define standard hues from the given LIST_OF_HUES.
-        The expected colors are: red, yellow, green, cyan, blue, magenta.
-'''.format(basename(sys.argv[0])))
+        Define standard hues from the given comma separated list LIST_OF_HUES.
+        The expected colors hues are: red, yellow, green, cyan, blue, magenta.
+'''.format(basename(sys.argv[0]), fgbg_contrast))
     sys.exit(1)
 
 def main():
