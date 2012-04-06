@@ -228,7 +228,7 @@ URxvt.colorIT: t_fg_highlight
 URxvt.colorUL: t_fg_highlight
 
 ! ORG
-URxvt.cursorColor: {violet}
+URxvt.cursorColor: {magenta}
 
 ! BLK
 URxvt.color0: t_bg_bump
@@ -246,7 +246,7 @@ URxvt.color15: t_fg_ceiling'''.format(**hex_color_set), file = xres_file)
     prop_cmd(704, hex_fg_hl)
     prop_cmd(707, hex_fg_hl)
 
-    prop_cmd(12, idx_to_hex(violet_i, fg_L, color_chroma))
+    prop_cmd(12, idx_to_hex(magenta_i, fg_L, color_chroma))
 
     redef_cmd(0, hex_bg_bp)
     redef_cmd(8, hex_fg_cm)
