@@ -65,13 +65,13 @@ def idx_to_hex(i, color_lightness, color_chroma):
     return hex_color
 
 def make_scheme(hex_bg, standard_hues, scheme_name):
-# In terms of legibiliy, the CIELCH lightness
-# difference of the foreground and background
-# colors must be superior to twenty-seven units.
-#
-# Reference:
-# Silvia Zuffi, Carla Brambilla, Giordano Beretta and Paolo Scala:
-# Human Computer Interaction: Legibility and Contrast (2007)
+    # In terms of legibiliy, the CIELCH lightness
+    # difference of the foreground and background
+    # colors must be superior to twenty-seven units.
+    #
+    # Reference:
+    # Silvia Zuffi, Carla Brambilla, Giordano Beretta and Paolo Scala:
+    # Human Computer Interaction: Legibility and Contrast (2007)
     global redef_file, fgbg_contrast, translate_stdin
     scheme_kind = 'dark'
     small_jump = 3
@@ -138,6 +138,9 @@ def make_scheme(hex_bg, standard_hues, scheme_name):
     (red_h, yellow_h, green_h, cyan_h, blue_h, magenta_h) = standard_hues
     (red_i, yellow_i, green_i, cyan_i, blue_i, magenta_i) = tuple(map(hue_to_idx, standard_hues))
 
+    # The color names are those given in the
+    # "216-Color Webmaster's Palette" by VisiBone:
+    # http://www.visibone.com/color/poster4x.html
     orange_h = mid_hue(red_h, yellow_h)
     spring_h = mid_hue(yellow_h, green_h)
     teal_h = mid_hue(green_h, cyan_h)
