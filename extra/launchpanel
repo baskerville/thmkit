@@ -1,5 +1,4 @@
 #! /bin/dash
 
-setlayout 0 3 3 0
 tint2 &
 neap &
