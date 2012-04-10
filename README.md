@@ -8,6 +8,8 @@ Once called it will create two files in the current directory. The one starting 
 
 [Preview](http://ge.tt/23u6FNC/v/3)
 
-# Vim Theme Skeleton Helper
+---
+
+## Vim Theme Skeleton Helper
 
 To make vim aware of the special skeleton color syntax, put `extra/vim.vim` in `~/.vim/ftplugin/`.
