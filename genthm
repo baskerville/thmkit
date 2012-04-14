@@ -38,6 +38,13 @@ def term_rgb(hex_color):
     cpts = re.match('#(..)(..)(..)', hex_color).groups()
     return 'rgb:%s/%s/%s' % cpts
 
+def alternate_screen(enable = True):
+    global redef_file
+    state = 'h'
+    if not enable:
+        state = 'l'
+    print("printf '\\033[?1049%s'" % state, file = redef_file) 
+
 def term_cmd(code, param):
     global redef_file
     print("printf '\\033]%i;%s\\007'" % (code, param), file = redef_file) 
@@ -290,6 +297,8 @@ URxvt.color8: t_fg_comment
 URxvt.color7: t_fg_highlight
 URxvt.color15: t_fg_ceiling'''.format(**hex_color_set), file = xres_file)
 
+    alternate_screen(True)
+
     prop_cmd(11, hex_bg)
     prop_cmd(708, hex_bg)
     prop_cmd(10, hex_fg)
@@ -345,6 +354,8 @@ URxvt.color%s: t_fg_ceiling''' % tuple(MONOTONES_SLOTS), file = xres_file)
 
     print(file = xres_file)
     print('! %s: set ft=xdefaults:' % 'vim', file = xres_file)
+
+    alternate_screen(False)
 
     xres_file.close()
     redef_file.close()
