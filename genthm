@@ -382,12 +382,15 @@ def usage():
     global fgbg_contrast
     print('''
 SYNOPSIS
-    {} [OPTIONS] [BACKGROUND_COLOR] [SCHEME_NAME]
+    {} [OPTIONS] [SCHEME_NAME]
 
 OPTIONS
     -h, --help
         Show this message.
     
+    -b, --background-color
+        Use the specified hex color as background color.
+
     -l, --light
         Use the predefined light background ({}).
 
@@ -419,11 +422,17 @@ OPTIONS
 
 def main():
     global standard_hues, scheme_name, fgbg_contrast, is_bg_dark, translate_to_index, translate_to_hex, translate_to_rgb, make_variations
-    opts, args = getopt(sys.argv[1:], 'hldtTrvc:s:', ['help', 'light', 'dark', 'translate-to-index', 'translate-to-hex', 'translate-to-rgb', 'make-variations', '--fgbg-contrast=', 'standard-hues='])
+    opts, args = getopt(sys.argv[1:], 'hldtTrvb:c:s:', ['help', 'light', 'dark', 'translate-to-index', 'translate-to-hex', 'translate-to-rgb', 'make-variations', '--fgbg-contrast=', 'standard-hues=', 'background-color='])
+
+    hex_bg = None
 
     for opt, val in opts:
         if opt in ('-h', '--help'):
             usage()
+        elif opt in ('-b', '--background-color'):
+            hex_bg = val.upper()
+        elif opt in ('-d', '--dark'):
+            is_bg_dark = True
         elif opt in ('-l', '--light'):
             is_bg_dark = False
         elif opt in ('-d', '--dark'):
@@ -441,16 +450,14 @@ def main():
         elif opt in ('-k', '--standard-hues'):
             standard_hues = map(float, val.split(','))
 
-    if len(args) > 0:
-        hex_bg = args[0].upper()
-    else:
+    if hex_bg == None:
         if is_bg_dark:
             hex_bg = DARK_BACKGROUND
         else:
             hex_bg = LIGHT_BACKGROUND
 
-    if len(args) > 1:
-        scheme_name = args[1]
+    if len(args) > 0:
+        scheme_name = args[0]
 
     standard_hues = tuple(map(approx_hue, standard_hues))
 
