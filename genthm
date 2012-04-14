@@ -387,9 +387,6 @@ SYNOPSIS
 OPTIONS
     -h, --help
         Show this message.
-    
-    -b, --background-color
-        Use the specified hex color as background color.
 
     -l, --light
         Use the predefined light background ({}).
@@ -410,11 +407,14 @@ OPTIONS
         Produce multiple versions of the color scheme by shifting
         the background lightness.
 
-    -c, --fgbg-contrast
+    -b, --background-color HEX_BG
+        Use the specified hex color as background color.
+
+    -c, --fgbg-contrast FGBG_CONTRAST
         Define the 'strength' of the contrast between the foreground
         and the background color (default value: {}).
 
-    -s, --standard-hues <LIST_OF_HUES>
+    -s, --standard-hues LIST_OF_HUES
         Define standard hues from the given comma separated list LIST_OF_HUES.
         The expected colors hues are: red, yellow, green, cyan, blue, magenta.
 '''.format(basename(sys.argv[0]), LIGHT_BACKGROUND, DARK_BACKGROUND, fgbg_contrast))
