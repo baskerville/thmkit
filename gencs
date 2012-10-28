@@ -51,9 +51,7 @@ def make_scheme():
         print_lch(name, lch_elt)
 
     hue_step = 360 / num_colors
-    color_hues = sorted([(bg_h + hue_step * i) % 360 for i in range(num_colors)])
-    if color_hues[0] > (hue_step / 2):
-        color_hues = color_hues[-1:] + color_hues[:-1]
+    color_hues = [hue_step * i for i in range(num_colors)]
 
     col_idx = 1
     for col_h in color_hues:
