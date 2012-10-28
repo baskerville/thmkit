@@ -2,19 +2,18 @@
 
 import sys
 import yaml
-from getopt import getopt
 from os.path import basename
 from colormath.color_objects import LCHabColor, RGBColor
 
 settings = {}
 
-def lch_to_hex(lch_c):
-    return lch_c.convert_to('rgb').get_rgb_hex().upper()
+def lch_to_hex(lch_color):
+    return lch_color.convert_to('rgb').get_rgb_hex().upper()
 
-def hex_to_lch(hex_c):
-    rgb_bg = RGBColor()
-    rgb_bg.set_from_rgb_hex(hex_c)
-    return rgb_bg.convert_to('lchab')
+def hex_to_lch(hex_color):
+    rgb_color = RGBColor()
+    rgb_color.set_from_rgb_hex(hex_color)
+    return rgb_color.convert_to('lchab')
 
 def print_lch(name, value):
     print('{}: "{}"'.format(name, lch_to_hex(value)))
@@ -65,7 +64,7 @@ def make_scheme():
 def usage():
     print('''
 SYNOPSIS
-    {} CONFIG_FILE
+    {} COLOR_PROFILE
 '''.format(basename(sys.argv[0])))
     sys.exit(1)
 
