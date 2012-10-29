@@ -13,6 +13,7 @@ color_scheme = {}
 output_dir = 'outputs'
 templates_dir = 'templates'
 filename_suffix = ''
+exclude_pattern = None
 
 def lch_to_hex(lch_color):
     return lch_color.convert_to('rgb').get_rgb_hex().upper()
@@ -61,6 +62,9 @@ def tune_hue(hex_color, value):
 def set_hue(hex_color, value):
     return alter_lch(hex_color, value, component='H', relative=False)
 
+def template_filter(tpl_pth):
+    return exclude_pattern == None or re.match(exclude_pattern, tpl_pth) == None
+
 def copy_dirs(src, dst):
     for root, dirnames, filenames in walk(src):
         for name in dirnames:
@@ -89,7 +93,7 @@ def translate_templates():
 
     copy_dirs(templates_dir, output_dir)
     
-    for tpl_pth in ldr.list_templates():
+    for tpl_pth in env.list_templates(filter_func=template_filter):
         tpl = env.get_template(tpl_pth)
         output_pth = '{}/{}{}'.format(output_dir, tpl_pth, filename_suffix)
         with open(output_pth, 'w') as f:
@@ -112,12 +116,15 @@ OPTIONS
 
     -s, --filename-suffix SUFFIX
         Add the given suffix to the output file names.
+
+    -e, --exclude-templates REGEXP
+        Exclude templates matching the given pattern.
 '''.format(basename(sys.argv[0])))
     sys.exit(1)
 
 def main():
-    global color_scheme, output_dir, templates_dir, filename_suffix
-    opts, args = getopt(sys.argv[1:], 'hc:o:s:', ['help', 'color-scheme=', 'output-directory=', 'filename-suffix='])
+    global color_scheme, output_dir, templates_dir, filename_suffix, exclude_pattern
+    opts, args = getopt(sys.argv[1:], 'hc:o:s:e:', ['help', 'color-scheme=', 'output-directory=', 'filename-suffix=', 'exclude-templates='])
 
     if len(args) < 1:
         usage()
@@ -134,6 +141,8 @@ def main():
             output_dir = val
         elif opt in ('-s', '--filename-suffix'):
             filename_suffix = val
+        elif opt in ('-e', '--exclude-templates'):
+            exclude_pattern = val
 
     translate_templates()
 
