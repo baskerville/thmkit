@@ -5,7 +5,7 @@ import sys
 import yaml
 import jinja2
 from os import walk, mkdir
-from os.path import basename, dirname, exists, isdir, join, relpath, normpath
+from os.path import basename, exists, isdir, join, relpath, normpath
 from getopt import getopt
 from colormath.color_objects import RGBColor, LCHabColor
 
