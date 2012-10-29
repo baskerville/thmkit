@@ -4,8 +4,8 @@ import re
 import sys
 import yaml
 import jinja2
-from os import mkdir
-from os.path import basename, exists, isfile
+from os import walk, mkdir
+from os.path import basename, dirname, exists, isdir, join, relpath, normpath
 from getopt import getopt
 from colormath.color_objects import RGBColor, LCHabColor
 
@@ -36,6 +36,11 @@ def raw_rgb(hex_color):
     rgb_color.set_from_rgb_hex(hex_color)
     return '{} {} {}'.format(*rgb_color.get_value_tuple())
 
+def copy_tree(src, dst):
+    for root, dirnames, filenames in walk(src):
+        for name in dirnames:
+            mkdir(normpath(join(dst, relpath(root, templates_dir), name)))
+
 def translate_templates():
     ldr = jinja2.FileSystemLoader(templates_dir)
     env = jinja2.Environment(loader=ldr)
@@ -46,9 +51,11 @@ def translate_templates():
 
     if not exists(output_dir):
         mkdir(output_dir)
-    elif isfile(output_dir):
+    elif not isdir(output_dir):
         print('not a directory: {}'.format(output_dir), file=sys.stderr)
         sys.exit(1)
+
+    copy_tree(templates_dir, output_dir)
     
     for tpl_pth in ldr.list_templates():
         tpl = env.get_template(tpl_pth)
