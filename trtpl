@@ -61,7 +61,7 @@ def tune_hue(hex_color, value):
 def set_hue(hex_color, value):
     return alter_lch(hex_color, value, component='H', relative=False)
 
-def copy_tree(src, dst):
+def copy_dirs(src, dst):
     for root, dirnames, filenames in walk(src):
         for name in dirnames:
             pth = normpath(join(dst, relpath(root, templates_dir), name))
@@ -87,7 +87,7 @@ def translate_templates():
         print('not a directory: {}'.format(output_dir), file=sys.stderr)
         sys.exit(1)
 
-    copy_tree(templates_dir, output_dir)
+    copy_dirs(templates_dir, output_dir)
     
     for tpl_pth in ldr.list_templates():
         tpl = env.get_template(tpl_pth)
@@ -111,7 +111,7 @@ OPTIONS
         Define where the compiled templates will be stored.
 
     -s, --filename-suffix SUFFIX
-        Add the given suffix to the output file name.
+        Add the given suffix to the output file names.
 '''.format(basename(sys.argv[0])))
     sys.exit(1)
 
