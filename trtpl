@@ -5,7 +5,7 @@ import sys
 import yaml
 import jinja2
 from os import walk, mkdir
-from os.path import basename, exists, isdir, join, relpath, normpath
+from os.path import basename, exists, isdir, join, relpath, normpath, splitext
 from getopt import getopt
 from colormath.color_objects import RGBColor, LCHabColor
 
@@ -13,6 +13,7 @@ color_scheme = {}
 output_dir = 'outputs'
 templates_dir = 'templates'
 filename_suffix = ''
+preserve_extensions = False
 exclude_pattern = None
 
 def lch_to_hex(lch_color):
@@ -95,7 +96,10 @@ def translate_templates():
     
     for tpl_pth in env.list_templates(filter_func=template_filter):
         tpl = env.get_template(tpl_pth)
-        output_pth = '{}/{}{}'.format(output_dir, tpl_pth, filename_suffix)
+        output_root = tpl_pth
+        if not preserve_extensions:
+            output_root, ext = splitext(tpl_pth)
+        output_pth = '{}/{}{}'.format(output_dir, output_root, filename_suffix)
         with open(output_pth, 'w') as f:
             f.write(tpl.render(color_scheme))
 
@@ -119,12 +123,15 @@ OPTIONS
 
     -e, --exclude-templates REGEXP
         Exclude templates matching the given pattern.
+
+    -p, --preserve-extensions
+        Preserve templates file name extensions in outputs.
 '''.format(basename(sys.argv[0])))
     sys.exit(1)
 
 def main():
-    global color_scheme, output_dir, templates_dir, filename_suffix, exclude_pattern
-    opts, args = getopt(sys.argv[1:], 'hc:o:s:e:', ['help', 'color-scheme=', 'output-directory=', 'filename-suffix=', 'exclude-templates='])
+    global color_scheme, output_dir, templates_dir, filename_suffix, exclude_pattern, preserve_extensions
+    opts, args = getopt(sys.argv[1:], 'hpc:o:s:e:', ['help', 'preserve-extensions', 'color-scheme=', 'output-directory=', 'filename-suffix=', 'exclude-templates='])
 
     if len(args) < 1:
         usage()
@@ -143,6 +150,8 @@ def main():
             filename_suffix = val
         elif opt in ('-e', '--exclude-templates'):
             exclude_pattern = val
+        elif opt in ('-p', '--preserve-extensions'):
+            preserve_extensions = True
 
     translate_templates()
 
