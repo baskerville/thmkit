@@ -10,11 +10,19 @@ from getopt import getopt
 from colormath.color_objects import RGBColor, LCHabColor
 
 color_scheme = {}
-output_dir = 'outputs'
+custom_filters = {}
+output_dir = 'output'
 templates_dir = 'templates'
 filename_suffix = ''
 preserve_extensions = False
 exclude_pattern = None
+
+try:
+    sys.path.append('.')
+    from settings import *
+    sys.path.pop()
+except ImportError as err:
+    pass
 
 def lch_to_hex(lch_color):
     return lch_color.convert_to('rgb').get_rgb_hex().upper()
@@ -37,10 +45,7 @@ def alter_lch(hex_color, value, component='L', relative=True):
     lch_color = rgb_color.convert_to('lchab')
     lch_lst = list(lch_color.get_value_tuple())
     comp_idx = ('L', 'C', 'H').index(component)
-    if relative:
-        lch_lst[comp_idx] = lch_lst[comp_idx] + value
-    else:
-        lch_lst[comp_idx] = value
+    lch_lst[comp_idx] = lch_lst[comp_idx] + value if relative else value
     L, C, H = lch_lst
     lch_res = LCHabColor(L, C, H)
     return lch_to_hex(lch_res)
@@ -85,6 +90,7 @@ def translate_templates():
     env.filters['_C'] = set_chroma
     env.filters['H'] = tune_hue
     env.filters['_H'] = set_hue
+    env.filters.update(custom_filters)
 
     if not exists(output_dir):
         mkdir(output_dir)
@@ -93,15 +99,13 @@ def translate_templates():
         sys.exit(1)
 
     copy_dirs(templates_dir, output_dir)
-    
+
     for tpl_pth in env.list_templates(filter_func=template_filter):
         tpl = env.get_template(tpl_pth)
-        output_root = tpl_pth
-        if not preserve_extensions:
-            output_root, ext = splitext(tpl_pth)
+        output_root = tpl_pth if preserve_extensions else splitext(tpl_pth)[0]
         output_pth = '{}/{}{}'.format(output_dir, output_root, filename_suffix)
         with open(output_pth, 'w') as f:
-            f.write(tpl.render(color_scheme))
+            f.write(tpl.render(color_scheme, **globals()))
 
 def usage():
     print('''
