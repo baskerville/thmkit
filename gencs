@@ -18,12 +18,18 @@ def hex_to_lch(hex_color):
 def print_lch(name, value):
     print('{}: "{}"'.format(name, lch_to_hex(value)))
 
+def color_suffix(bg_L, delta):
+    if ((bg_L < 50 and delta >= 0) or (bg_L >= 50 and delta < 0)):
+        return 'b'
+    else:
+        return 'd'
+
 def make_scheme():
     hex_bg = settings['background']
     hex_fg = settings['foreground']
     num_colors = settings['num_colors']
     color_chroma = settings['color_chroma']
-    color_delta = settings['color_delta']
+    color_deltas = settings['color_deltas']
     color_names = settings['color_names']
 
     lch_bg = hex_to_lch(hex_bg)
@@ -56,8 +62,9 @@ def make_scheme():
     color_hues = [hue_step * i for i in range(num_colors)]
 
     for name, col_h in zip(color_names, color_hues):
-        lch_col = LCHabColor(fg_L + color_delta, color_chroma, col_h)
-        print('{}: "{}"'.format(name, lch_to_hex(lch_col)))
+        for delta in color_deltas:
+            lch_col = LCHabColor(fg_L + delta, color_chroma, col_h)
+            print('{}{}{}: "{}"'.format(name, color_suffix(bg_L, delta), abs(delta), lch_to_hex(lch_col)))
 
 def usage():
     print('''
