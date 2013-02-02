@@ -3,6 +3,7 @@ foreground: "#A4A6B1"
 num_colors: 12
 color_chroma: 33
 color_deltas: [6, -15]
+delta_prefixes: ['light', 'dark']
 color_names:
     - pink
     - red
