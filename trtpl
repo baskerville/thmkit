@@ -38,7 +38,7 @@ def interpret_values():
     global color_scheme, color_space
     for name, value in color_scheme.items():
         source_color = space_to_class[color_space](*value)
-        color_scheme[name] = source_color.convert_to('rgb').get_rgb_hex()
+        color_scheme[name] = source_color.convert_to('rgb').get_rgb_hex().upper()
 
 def translate_templates():
     ldr = jinja2.FileSystemLoader(templates_dir)
