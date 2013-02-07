@@ -7,7 +7,6 @@ import jinja2
 from os import walk, mkdir
 from os.path import basename, exists, isdir, join, relpath, normpath, splitext
 from getopt import getopt
-from colormath.color_objects import RGBColor, LCHabColor
 
 color_scheme = {}
 custom_filters = {}
@@ -24,50 +23,6 @@ try:
 except ImportError as err:
     pass
 
-def lch_to_hex(lch_color):
-    return lch_color.convert_to('rgb').get_rgb_hex().upper()
-
-def raw_hex(hex_color):
-    return hex_color[1:]
-
-def slashed_hex(hex_color):
-    grps = re.match('#(..)(..)(..)', hex_color).groups()
-    return 'rgb:{}/{}/{}'.format(*grps)
-
-def raw_rgb(hex_color):
-    rgb_color = RGBColor()
-    rgb_color.set_from_rgb_hex(hex_color)
-    return '{} {} {}'.format(*rgb_color.get_value_tuple())
-
-def alter_lch(hex_color, value, component='L', relative=True):
-    rgb_color = RGBColor()
-    rgb_color.set_from_rgb_hex(hex_color)
-    lch_color = rgb_color.convert_to('lchab')
-    lch_lst = list(lch_color.get_value_tuple())
-    comp_idx = ('L', 'C', 'H').index(component)
-    lch_lst[comp_idx] = lch_lst[comp_idx] + value if relative else value
-    L, C, H = lch_lst
-    lch_res = LCHabColor(L, C, H)
-    return lch_to_hex(lch_res)
-
-def tune_lightness(hex_color, value):
-    return alter_lch(hex_color, value)
-
-def set_lightness(hex_color, value):
-    return alter_lch(hex_color, value, relative=False)
-
-def tune_chroma(hex_color, value):
-    return alter_lch(hex_color, value, component='C')
-
-def set_chroma(hex_color, value):
-    return alter_lch(hex_color, value, component='C', relative=False)
-
-def tune_hue(hex_color, value):
-    return alter_lch(hex_color, value, component='H')
-
-def set_hue(hex_color, value):
-    return alter_lch(hex_color, value, component='H', relative=False)
-
 def template_filter(tpl_pth):
     return exclude_pattern == None or re.match(exclude_pattern, tpl_pth) == None
 
@@ -81,15 +36,6 @@ def copy_dirs(src, dst):
 def translate_templates():
     ldr = jinja2.FileSystemLoader(templates_dir)
     env = jinja2.Environment(loader=ldr)
-    env.filters['slashedhex'] = slashed_hex
-    env.filters['rawhex'] = raw_hex
-    env.filters['rawrgb'] = raw_rgb
-    env.filters['L'] = tune_lightness
-    env.filters['_L'] = set_lightness
-    env.filters['C'] = tune_chroma
-    env.filters['_C'] = set_chroma
-    env.filters['H'] = tune_hue
-    env.filters['_H'] = set_hue
     env.filters.update(custom_filters)
 
     if not exists(output_dir):
