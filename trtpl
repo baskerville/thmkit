@@ -8,6 +8,7 @@ import jinja2
 from os import walk, mkdir
 from os.path import basename, exists, isdir, join, relpath, normpath, splitext
 from getopt import getopt
+from colormath.color_objects import LabColor, LCHabColor, LuvColor
 
 color_scheme = {}
 custom_filters = {}
@@ -22,7 +23,7 @@ try:
         sys.path.insert(1, filters_dir);
         from color_filters import *
         sys.path.pop(1)
-except ImportError as err:
+except:
     pass
 
 def copy_dirs(src, dst):
@@ -32,10 +33,25 @@ def copy_dirs(src, dst):
             if not exists(pth):
                 mkdir(pth)
 
+def normalize_values():
+    global color_scheme
+    for name, value in color_scheme.items():
+        if re.match('^\w+:[^:]+$', value):
+            color_space, color_components = value.split(':')
+            color_tuple = map(float, re.split('[, ]+', color_components.strip()))
+            if color_space == 'LCH':
+                source_color = LCHabColor(*color_tuple)
+            elif color_space == 'Lab':
+                source_color = LabColor(*color_tuple)
+            elif color_space == 'Luv':
+                source_color = LuvColor(*color_tuple)
+            color_scheme[name] = source_color.convert_to('rgb').get_rgb_hex()
+
 def translate_templates():
     ldr = jinja2.FileSystemLoader(templates_dir)
     env = jinja2.Environment(loader=ldr)
     env.filters.update(custom_filters)
+    normalize_values()
 
     if not exists(output_dir):
         mkdir(output_dir)
