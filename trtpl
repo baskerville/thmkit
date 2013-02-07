@@ -1,5 +1,6 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
+import os
 import re
 import sys
 import yaml
@@ -14,17 +15,15 @@ output_dir = 'output'
 templates_dir = 'templates'
 filename_suffix = ''
 preserve_extensions = False
-exclude_pattern = None
 
 try:
-    sys.path.append('.')
-    from settings import *
-    sys.path.pop()
+    filters_dir = os.getenv("TRTPL_FILTERS_DIR")
+    if filters_dir is not None:
+        sys.path.insert(1, filters_dir);
+        from color_filters import *
+        sys.path.pop(1)
 except ImportError as err:
     pass
-
-def template_filter(tpl_pth):
-    return exclude_pattern == None or re.match(exclude_pattern, tpl_pth) == None
 
 def copy_dirs(src, dst):
     for root, dirnames, filenames in walk(src):
@@ -46,7 +45,7 @@ def translate_templates():
 
     copy_dirs(templates_dir, output_dir)
 
-    for tpl_pth in env.list_templates(filter_func=template_filter):
+    for tpl_pth in env.list_templates():
         tpl = env.get_template(tpl_pth)
         output_root = tpl_pth if preserve_extensions else splitext(tpl_pth)[0]
         output_pth = '{}/{}{}'.format(output_dir, output_root, filename_suffix)
@@ -71,17 +70,14 @@ OPTIONS
     -s, --filename-suffix SUFFIX
         Add the given suffix to the output file names.
 
-    -e, --exclude-templates REGEXP
-        Exclude templates matching the given pattern.
-
     -p, --preserve-extensions
         Preserve templates file name extensions in outputs.
 '''.format(basename(sys.argv[0])))
     sys.exit(1)
 
 def main():
-    global color_scheme, output_dir, templates_dir, filename_suffix, exclude_pattern, preserve_extensions
-    opts, args = getopt(sys.argv[1:], 'hpc:o:s:e:', ['help', 'preserve-extensions', 'color-scheme=', 'output-directory=', 'filename-suffix=', 'exclude-templates='])
+    global color_scheme, output_dir, templates_dir, filename_suffix, preserve_extensions
+    opts, args = getopt(sys.argv[1:], 'hpc:o:s:', ['help', 'preserve-extensions', 'color-scheme=', 'output-directory=', 'filename-suffix='])
 
     if len(args) < 1:
         usage()
@@ -98,8 +94,6 @@ def main():
             output_dir = val
         elif opt in ('-s', '--filename-suffix'):
             filename_suffix = val
-        elif opt in ('-e', '--exclude-templates'):
-            exclude_pattern = val
         elif opt in ('-p', '--preserve-extensions'):
             preserve_extensions = True
 
