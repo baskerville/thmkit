@@ -3,9 +3,22 @@
 ## Usage
 
     trtpl [OPTIONS] TEMPLATE_DIR
-    gencs COLOR_PROFILE
 
 The `TRTPL_FILTERS_DIR` environment variable shall point to the directory holding your custom filters.
+
+## Options
+
+- `-h, --help` — Show the synopsis on standard output and exit.
+
+- `-c, --color-scheme COLOR_SCHEME` — Read colors from the given file.
+
+- `-i, --color-space LCHab|Lab` — Set the color space of the color scheme.
+
+- `-o, --output-directory OUTPUT_DIR` — Define where the compiled templates will be stored.
+
+- `-s, --filename-suffix SUFFIX` — Add the given suffix to the output file names.
+
+- `-p, --preserve-extensions` — Preserve templates file name extensions in outputs.
 
 ## Example Invocation
 

@@ -1,21 +1,22 @@
 #! /usr/bin/env python3
 
 import os
-import re
 import sys
 import yaml
 import jinja2
 from os import walk, mkdir
 from os.path import basename, exists, isdir, join, relpath, normpath, splitext
 from getopt import getopt
-from colormath.color_objects import LabColor, LCHabColor, LuvColor
+from colormath.color_objects import LCHabColor, LabColor
 
 color_scheme = {}
 custom_filters = {}
 output_dir = 'output'
 templates_dir = 'templates'
+color_space = None
 filename_suffix = ''
 preserve_extensions = False
+space_to_class = {'LCHab': LCHabColor, 'Lab': LabColor}
 
 try:
     filters_dir = os.getenv("TRTPL_FILTERS_DIR")
@@ -33,25 +34,18 @@ def copy_dirs(src, dst):
             if not exists(pth):
                 mkdir(pth)
 
-def normalize_values():
-    global color_scheme
+def interpret_values():
+    global color_scheme, color_space
     for name, value in color_scheme.items():
-        if re.match('^\w+:[^:]+$', value):
-            color_space, color_components = value.split(':')
-            color_tuple = map(float, re.split('[, ]+', color_components.strip()))
-            if color_space == 'LCH':
-                source_color = LCHabColor(*color_tuple)
-            elif color_space == 'Lab':
-                source_color = LabColor(*color_tuple)
-            elif color_space == 'Luv':
-                source_color = LuvColor(*color_tuple)
-            color_scheme[name] = source_color.convert_to('rgb').get_rgb_hex()
+        source_color = space_to_class[color_space](*value)
+        color_scheme[name] = source_color.convert_to('rgb').get_rgb_hex()
 
 def translate_templates():
     ldr = jinja2.FileSystemLoader(templates_dir)
     env = jinja2.Environment(loader=ldr)
     env.filters.update(custom_filters)
-    normalize_values()
+    if color_space is not None:
+        interpret_values()
 
     if not exists(output_dir):
         mkdir(output_dir)
@@ -75,10 +69,13 @@ SYNOPSIS
 
 OPTIONS
     -h, --help
-        Show this message.
+        Show the synopsis on standard output and exit.
 
     -c, --color-scheme COLOR_SCHEME
         Read colors from the given file.
+
+    -i, --color-space LCHab|Lab
+        Set the color space of the color scheme.
 
     -o, --output-directory OUTPUT_DIR
         Define where the compiled templates will be stored.
@@ -92,8 +89,8 @@ OPTIONS
     sys.exit(1)
 
 def main():
-    global color_scheme, output_dir, templates_dir, filename_suffix, preserve_extensions
-    opts, args = getopt(sys.argv[1:], 'hpc:o:s:', ['help', 'preserve-extensions', 'color-scheme=', 'output-directory=', 'filename-suffix='])
+    global color_scheme, color_space, output_dir, templates_dir, filename_suffix, preserve_extensions
+    opts, args = getopt(sys.argv[1:], 'hpc:i:o:s:', ['help', 'preserve-extensions', 'color-scheme=', 'color-space=', 'output-directory=', 'filename-suffix='])
 
     if len(args) < 1:
         usage()
@@ -106,6 +103,8 @@ def main():
         elif opt in ('-c', '--color-scheme'):
             with open(val, 'r') as f:
                 color_scheme.update(yaml.load(f.read()))
+        elif opt in ('-i', '--color-space'):
+            color_space = val
         elif opt in ('-o', '--output-directory'):
             output_dir = val
         elif opt in ('-s', '--filename-suffix'):
