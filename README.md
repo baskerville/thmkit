@@ -4,7 +4,7 @@
 
     trtpl [OPTIONS] TEMPLATE_DIR
 
-The `TRTPL_FILTERS_DIR` environment variable shall point to the directory holding your custom filters.
+The `JINJA2_FILTERS_DIR` environment variable shall point to the directory holding your custom filters (`trtpl` will try to import `$JINJA2_FILTERS_DIR/trtpl_filters.py`).
 
 ## Options
 
@@ -22,7 +22,7 @@ The `TRTPL_FILTERS_DIR` environment variable shall point to the directory holdin
 
 ## Example Invocation
 
-    TRTPL_FILTERS_DIR=./examples/filters ./trtpl -o output -c examples/color_schemes/raven_dark.yaml examples/templates
+    JINJA2_FILTERS_DIR=./examples/filters ./trtpl -o output -c examples/color_schemes/raven_dark.yaml examples/templates
 
 ## Required Libraries
 
