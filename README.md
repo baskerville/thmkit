@@ -12,7 +12,7 @@ The `JINJA2_FILTERS_DIR` environment variable shall point to the directory holdi
 
 - `-c, --color-scheme COLOR_SCHEME` — Read colors from the given file.
 
-- `-i, --color-space LCHab|Lab` — Set the color space of the color scheme.
+- `-i, --color-space LCHab|Lab|CMYK` — Set the color space of the color scheme.
 
 - `-o, --output-directory OUTPUT_DIR` — Define where the compiled templates will be stored.
 
