@@ -16,7 +16,7 @@ templates_dir = 'templates'
 color_space = None
 filename_suffix = ''
 preserve_extensions = False
-space_to_class = {'LCHab': LCHabColor, 'Lab': LabColor, 'CMYK': CMYKColor}
+space_to_class = {'LCH': LCHabColor, 'Lab': LabColor, 'CMYK': CMYKColor}
 
 try:
     filters_dir = os.getenv("JINJA2_FILTERS_DIR")
@@ -76,7 +76,7 @@ OPTIONS
     -c, --color-scheme COLOR_SCHEME
         Read colors from the given file.
 
-    -i, --color-space LCHab|Lab|CMYK
+    -i, --color-space LCH|Lab|CMYK
         Set the color space of the color scheme.
 
     -o, --output-directory OUTPUT_DIR
