@@ -1,0 +1,28 @@
+#
+# Lost Woods
+# Color space: LCH
+#
+
+background:   [0  , 0 , 0]
+foreground:   [60 , 0 , 0]
+
+bg_dip:       [0  , 0 , 0]
+bg_bump:      [6  , 0 , 0]
+bg_jump:      [20 , 0 , 0]
+
+fg_comment:   [40 , 0 , 0]
+fg_highlight: [80 , 0 , 0]
+fg_peak:      [100, 0 , 0]
+
+red:          [80 , 50, 30]
+darkred:      [40 , 50, 30]
+yellow:       [80 , 50, 150]
+darkyellow:   [40 , 50, 150]
+green:        [80 , 50, 180]
+darkgreen:    [40 , 50, 180]
+cyan:         [80 , 50, 210]
+darkcyan:     [40 , 50, 210]
+blue:         [80 , 50, 0]
+darkblue:     [40 , 50, 0]
+magenta:      [80 , 50, 330]
+darkmagenta:  [40 , 50, 330]

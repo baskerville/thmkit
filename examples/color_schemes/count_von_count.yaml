@@ -1,0 +1,28 @@
+#
+# Count von Count
+# Color space: LCH
+#
+
+background:   [0  , 0 , 0]
+foreground:   [60 , 0 , 0]
+
+bg_dip:       [0  , 0 , 0]
+bg_bump:      [6  , 0 , 0]
+bg_jump:      [20 , 0 , 0]
+
+fg_comment:   [40 , 0 , 0]
+fg_highlight: [80 , 0 , 0]
+fg_peak:      [100, 0 , 0]
+
+red:          [80 , 80, 30]
+darkred:      [40 , 80, 30]
+yellow:       [80 , 68, 30]
+darkyellow:   [40 , 68, 30]
+green:        [80 , 56, 30]
+darkgreen:    [40 , 56, 30]
+cyan:         [80 , 44, 30]
+darkcyan:     [40 , 44, 30]
+blue:         [80 , 32, 30]
+darkblue:     [40 , 32, 30]
+magenta:      [80 , 20, 30]
+darkmagenta:  [40 , 20, 30]

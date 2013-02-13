@@ -67,7 +67,7 @@ def translate_templates():
 def usage():
     print('''
 SYNOPSIS
-    {} [OPTIONS] TEMPLATE_DIR
+    {} [OPTIONS] TEMPLATES_DIR
 
 OPTIONS
     -h, --help
@@ -80,7 +80,7 @@ OPTIONS
         Set the color space of the color scheme.
 
     -o, --output-directory OUTPUT_DIR
-        Define where the compiled templates will be stored.
+        Define where the rendered templates will be stored.
 
     -s, --filename-suffix SUFFIX
         Add the given suffix to the output file names.
