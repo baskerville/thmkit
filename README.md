@@ -10,7 +10,7 @@
 
 The directory structure present in the template directory is reproduced in the output directory.
 
-The `JINJA2_FILTERS_DIR` environment variable shall point to the directory holding your custom filters (`trtpl` will try to import `$JINJA2_FILTERS_DIR/trtpl_filters.py`).
+The `JINJA_FILTERS_DIR` environment variable shall point to the directory holding your custom filters (`trtpl` will try to import `$JINJA_FILTERS_DIR/trtpl_filters.py`).
 
 ## Options
 
@@ -28,7 +28,7 @@ The `JINJA2_FILTERS_DIR` environment variable shall point to the directory holdi
 
 ## Example Invocation
 
-    JINJA2_FILTERS_DIR=./examples/filters ./trtpl -o output -c examples/color_schemes/ivory-dark.yaml -i LCH examples/templates
+    JINJA_FILTERS_DIR=./examples/filters ./trtpl -o output -c examples/color_schemes/ivory-dark.yaml -i LCH examples/templates
     ./output/redef
 
 ## Required Libraries

@@ -19,7 +19,7 @@ preserve_extensions = False
 space_to_class = {'LCH': LCHabColor, 'Lab': LabColor, 'CMYK': CMYKColor}
 
 try:
-    filters_dir = os.getenv("JINJA2_FILTERS_DIR")
+    filters_dir = os.getenv("JINJA_FILTERS_DIR")
     if filters_dir is not None:
         sys.path.insert(1, filters_dir);
         from trtpl_filters import *
