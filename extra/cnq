@@ -1,4 +1,4 @@
-#! /bin/dash
+#! /bin/sh
 
 COLORDB="$XDG_DATA_HOME/colordb.txt"
 
@@ -6,11 +6,10 @@ exact_match=0
 sel_fields="1-2"
 
 usage() {
-    printf "usage: %s [-q][-l][-x] PATTERN ...\n" "${0##*/}"
-    exit 1
+    printf "Usage: %s [-h|-q|-l|-x] STRING ...\n" "${0##*/}"
 }
 
-while getopts "qlx" opt ; do
+while getopts "hqlx" opt ; do
     case $opt in
         q)
             sel_fields=2
@@ -21,8 +20,9 @@ while getopts "qlx" opt ; do
         x)
             exact_match=1
             ;;
-        \?)
+        h)
             usage
+            exit 0
             ;;
     esac
 done
@@ -31,6 +31,7 @@ shift $((OPTIND - 1))
 
 if [ $# -eq 0 ] ; then
     usage
+    exit 1
 fi
 
 while [ $# -gt 0 ] ; do
