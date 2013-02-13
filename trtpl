@@ -77,7 +77,7 @@ OPTIONS
         Read colors from the given file.
 
     -i, --color-space LCH|Lab|CMYK
-        Set the color space of the color scheme.
+        Set the input color space.
 
     -o, --output-directory OUTPUT_DIR
         Define where the rendered templates will be stored.
