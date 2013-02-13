@@ -6,7 +6,7 @@
 
 ## Description
 
-`trtpl` renders templates via YAML color schemes and Jinja2 filters.
+`trtpl` renders templates via YAML color schemes and Jinja filters.
 
 The directory structure present in the template directory is reproduced in the output directory.
 
@@ -34,5 +34,5 @@ The `JINJA2_FILTERS_DIR` environment variable shall point to the directory holdi
 ## Required Libraries
 
 - python-colormath
-- python-jinja2
+- python-jinja
 - python-yaml
