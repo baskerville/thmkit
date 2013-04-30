@@ -1,6 +1,6 @@
 #
 # Ivory Dark
-# Color space: LCH
+# Color space: LCHab
 #
 
 background:   [18,  3,  90]

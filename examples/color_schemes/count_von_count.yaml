@@ -1,6 +1,6 @@
 #
 # Count von Count
-# Color space: LCH
+# Color space: LCHab
 #
 
 background:   [0  , 0 , 0]
