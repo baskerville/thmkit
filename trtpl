@@ -7,16 +7,17 @@ import jinja2
 from os import walk, mkdir
 from os.path import basename, exists, isdir, join, relpath, normpath, splitext
 from getopt import getopt
-from colormath.color_objects import LCHabColor, LabColor, CMYKColor
+from colormath.color_objects import sRGBColor, LCHabColor, LabColor, CMYKColor
+from colormath.color_conversions import convert_color
 
 color_scheme = {}
 custom_filters = {}
-output_dir = 'output'
-templates_dir = 'templates'
+output_dir = "output"
+templates_dir = "templates"
 color_space = None
-filename_suffix = ''
+filename_suffix = ""
 preserve_extensions = False
-space_to_class = {'LCH': LCHabColor, 'Lab': LabColor, 'CMYK': CMYKColor}
+space_to_class = {"LCH": LCHabColor, "Lab": LabColor, "CMYK": CMYKColor}
 
 try:
     filters_dir = os.getenv("JINJA_FILTERS_DIR")
@@ -38,7 +39,9 @@ def interpret_values():
     global color_scheme, color_space
     for name, value in color_scheme.items():
         source_color = space_to_class[color_space](*value)
-        color_scheme[name] = source_color.convert_to('rgb').get_rgb_hex().upper()
+        rgb_color = convert_color(source_color, sRGBColor)
+        clamped_rgb = sRGBColor(rgb_color.clamped_rgb_r, rgb_color.clamped_rgb_g, rgb_color.clamped_rgb_b)
+        color_scheme[name] = clamped_rgb.get_rgb_hex()
 
 def translate_templates():
     ldr = jinja2.FileSystemLoader(templates_dir)
@@ -50,7 +53,7 @@ def translate_templates():
     if not exists(output_dir):
         mkdir(output_dir)
     elif not isdir(output_dir):
-        print('not a directory: {}'.format(output_dir), file=sys.stderr)
+        print("Not a directory: '{}'.".format(output_dir), file=sys.stderr)
         sys.exit(1)
 
     copy_dirs(templates_dir, output_dir)
@@ -58,14 +61,14 @@ def translate_templates():
     for tpl_pth in env.list_templates():
         tpl = env.get_template(tpl_pth)
         output_root = tpl_pth if preserve_extensions else splitext(tpl_pth)[0]
-        output_pth = '{}/{}{}'.format(output_dir, output_root, filename_suffix)
-        with open(output_pth, 'w') as f:
+        output_pth = "{}/{}{}".format(output_dir, output_root, filename_suffix)
+        with open(output_pth, "w") as f:
             f.write(tpl.render(color_scheme))
         tpl_mode = os.stat(join(templates_dir, tpl_pth)).st_mode
         os.chmod(output_pth, tpl_mode)
 
 def usage():
-    print('''
+    print("""
 SYNOPSIS
     {} [OPTIONS] TEMPLATES_DIR
 
@@ -87,12 +90,12 @@ OPTIONS
 
     -p, --preserve-extensions
         Preserve templates file name extensions in outputs.
-'''.format(basename(sys.argv[0])))
+""".format(basename(sys.argv[0])))
     sys.exit(1)
 
 def main():
     global color_scheme, color_space, output_dir, templates_dir, filename_suffix, preserve_extensions
-    opts, args = getopt(sys.argv[1:], 'hpc:i:o:s:', ['help', 'preserve-extensions', 'color-scheme=', 'color-space=', 'output-directory=', 'filename-suffix='])
+    opts, args = getopt(sys.argv[1:], "hpc:i:o:s:", ["help", "preserve-extensions", "color-scheme=", "color-space=", "output-directory=", "filename-suffix="])
 
     if len(args) < 1:
         usage()
@@ -100,21 +103,21 @@ def main():
     templates_dir = args[0]
 
     for opt, val in opts:
-        if opt in ('-h', '--help'):
+        if opt in ("-h", "--help"):
             usage()
-        elif opt in ('-c', '--color-scheme'):
-            with open(val, 'r') as f:
+        elif opt in ("-c", "--color-scheme"):
+            with open(val, "r") as f:
                 color_scheme.update(yaml.load(f.read()))
-        elif opt in ('-i', '--color-space'):
+        elif opt in ("-i", "--color-space"):
             color_space = val
-        elif opt in ('-o', '--output-directory'):
+        elif opt in ("-o", "--output-directory"):
             output_dir = val
-        elif opt in ('-s', '--filename-suffix'):
+        elif opt in ("-s", "--filename-suffix"):
             filename_suffix = val
-        elif opt in ('-p', '--preserve-extensions'):
+        elif opt in ("-p", "--preserve-extensions"):
             preserve_extensions = True
 
     translate_templates()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
